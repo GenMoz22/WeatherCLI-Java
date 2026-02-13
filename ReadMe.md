@@ -1,86 +1,76 @@
 # WeatherCLI-Java
+**WeatherCLI-Java** è uno strumento di monitoraggio meteo avanzato da riga di comando. Sfruttando Java 21 e le API di Open-Meteo, offre un'analisi dettagliata del clima attuale e previsioni a lungo termine con un sistema di caching intelligente per ottimizzare le performance.
 
-**WeatherCLI-Java** è un'applicazione da riga di comando (CLI) leggera e performante che fornisce dati meteo in tempo reale. Sfruttando la potenza di Java 21 e l'efficienza delle API di Open-Meteo, l'app trasforma nomi di città in coordinate geografiche per restituire dettagli climatici precisi.
-
-## Panoramica
-
-* **Geocoding Dinamico**: Conversione automatica dei nomi delle città in coordinate (Latitudine/Longitudine).
-* **Dati Meteo Real-time**: Visualizzazione di temperatura, velocità del vento e umidità.
-* **Architettura Moderna**: Utilizzo di Java **Records** per l'immutabilità dei dati e **Lombok**
-* **Logging Professionale**: Implementazione di **SLF4J** con rotazione automatica dei log (file vs console).
-* **Parsing Custom**: Motore di estrazione JSON leggero integrato senza dipendenze pesanti.
+## Funzioni
+* **Monitoraggio Avanzato**: Visualizzazione di temperatura, velocità del vento, indice UV e probabilità di pioggia (attuale e giornaliera).
+* **Previsioni a 7 Giorni**: Analisi delle temperature minime e massime per la settimana entrante con output tabellare ASCII.
+* **Smart Caching**: Sistema di memorizzazione in-memory (`ConcurrentHashMap`) che riduce le chiamate API ridondanti (validità 30 minuti).
+* **Architettura Clean**: Utilizzo di Java **Records** per modelli dati immutabili e **Lombok**
+* **Logging Professionale**: Gestione differenziata dei log tramite **SLF4J/Logback** con rotazione automatica e archiviazione.
+* **Robustezza**: Gestione delle coordinate internazionali tramite `Locale.US` per prevenire errori di formattazione numerica.
 
 ## Installation & Setup
 
 ### Prerequisiti
 
 * **Java 17** o superiore.
-* **Apache Maven** (per la gestione delle dipendenze e build).
+* **Apache Maven**.
 
-### Step 1: Clonare il repository
+### Step 1: Clonare e Compilare
 
 ```bash
 git clone https://github.com/GenMoz22/WeatherCLI-Java.git
 cd WeatherCLI-Java
-
-```
-
-### Step 2: Compilazione
-
-Utilizzando Maven per gestire Lombok e le dipendenze:
-
-```bash
 mvn clean compile
 
 ```
 
-### Step 3: Esecuzione
+### Step 2: Esecuzione
 
 ```bash
 mvn exec:java -Dexec.mainClass="com.weather.Main"
 
 ```
 
-## Uso
-L'applicazione utilizza uno `Scanner` interattivo. Una volta avviata, segui le istruzioni a terminale:
-
-1. **Avvio**: L'app si mette in ascolto dell'input.
-2. **Input**: Digita il nome di una città (es. `Milano` o `Tokyo`).
-3. **Output**:
+## Guida all'Uso
+L'applicazione è interattiva. Inserisci il nome della città per ottenere il report completo:
 
 ```text
-Inserisci il nome della città: Milano
+Inserisci nome città (o 'exit' per uscire): Milano
 
---- METEO ---
-Città: Milano
-Temperatura attuale: 18.5°C
---------------
+=== MONITORAGGIO METEO: MILANO ===
+Temp: 12.5°C | Vento: 8.4 km/h | UV: 1.2 | Pioggia Attuale: 15%
+
+PREVISIONI 7 GIORNI:
++------------+------------+------------+------------+
+| Data       | Max (°C)   | Min (°C)   | Pioggia %  |
++------------+------------+------------+------------+
+| 2026-02-13 | 14.2       | 5.1        | 20         |
+| 2026-02-14 | 11.5       | 4.8        | 85         |
++------------+------------+------------+------------+
 
 ```
 
 ## API Reference
-L'app interagisce con l'ecosistema **Open-Meteo**. Non è richiesta alcuna API Key.
+Il progetto utilizza gli endpoint di **Open-Meteo** (nessuna API Key richiesta):
 
-| Servizio | Endpoint | Parametri Principali |
+| Servizio | Endpoint | Parametri |
 | --- | --- | --- |
-| **Geocoding** | `search?name={city}` | `count=1`, `language=it` |
-| **Forecast** | `forecast?latitude={lat}&longitude={lon}` | `current_weather=true` |
+| **Geocoding** | `search?name={city}` | `count=1` |
+| **Forecast** | `forecast?latitude={lat}&longitude={lon}` | `current=...`, `daily=...` |
 
-## Error Handling
-L'applicazione è progettata per essere resiliente ai comuni scenari di errore:
+## Error Handling & Resilience
+* **Network Errors**: Gestione dei timeout e delle mancate connessioni con log di livello `ERROR`.
+* **Data Integrity**: Validazione della presenza delle chiavi JSON (`current`, `daily`) prima del parsing.
+* **Coordinate Fix**: Utilizzo forzato del punto decimale per garantire la compatibilità internazionale delle URL.
 
-* **Città non trovata**: Se l'API Geocoding restituisce un array vuoto, l'app logga un `WARN` e informa l'utente in modo gentile.
-* **Assenza di Connessione**: Errori di rete vengono intercettati dal blocco `try-catch`, loggati con stack trace completo nel file `logs/app.log` (livello `ERROR`) e comunicati sinteticamente all'utente.
-* **Input Non Valido**: Stringhe vuote o caratteri speciali non supportati vengono gestiti tramite `URLEncoder`.
-
-## Logging System
-I log sono configurati tramite `logback.xml`:
-
-* **Console**: Mostra solo messaggi `WARN` ed `ERROR`.
-* **File (`/logs/weather_app.log`)**: Contiene log dettagliati (livello `DEBUG` e `INFO`) con rotazione automatica al raggiungimento di 10MB.
+## Logging & Cache
+* **Logs**: Salvati in `/logs/weather_app.log`. La console mostra solo `WARN` e superiori, mentre il file logga anche `INFO` e `DEBUG`.
+* **Cache**: Se richiedi la stessa città entro 30 minuti, l'app restituisce istantaneamente i dati salvati, evitando traffico di rete inutile.
 
 ## Roadmap
-* [ ] **Altro oltre alla temperatura!**: Maggiori informazioni.
-* [ ] **Previsioni a 7 giorni**: Espansione del parser per gestire array di dati settimanali.
 
-
+* [x] **Dati Avanzati** (UV, Vento, Precipitazioni).
+* [x] **Previsioni a 7 giorni** con parsing di array JSON.
+* [x] **Sistema di Caching** in-memory.
+* [ ] **Esportazione PDF/CSV**: Generazione di report scaricabili.

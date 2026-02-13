@@ -10,7 +10,6 @@ public class JsonParserTest {
     @DisplayName("Garantisce l'estrazione corretta di un oggetto annidato")
     void testGetObjectSuccess() {
         String json = "{\"results\":[{\"latitude\":10.0}],\"status\":\"OK\"}";
-        // Il parser si aspetta la chiave con le virgolette come nel codice reale
         String result = JsonParser.getObject(json, "\"results\"");
         assertTrue(result.contains("\"latitude\":10.0"));
     }

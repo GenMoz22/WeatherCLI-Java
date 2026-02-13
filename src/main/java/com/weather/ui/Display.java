@@ -1,18 +1,24 @@
 package com.weather.ui;
 
-import com.weather.model.WeatherData;
+import com.weather.model.WeatherResponse;
+import com.weather.model.DailyForecast;
 
-import lombok.extern.slf4j.Slf4j;
-@Slf4j
 public class Display {
-    public static void printWeather(String city, WeatherData data) {
-        if (data != null) {
-            System.out.println("\n--- METEO ---");
-            System.out.println("Città: " + city);
-            System.out.println("Temperatura attuale: " + data.temperature() + "°C");
-            System.out.println("--------------");
-        } else {
-            log.warn("Errore: Dati meteo non disponibili");
+    public static void printCompleteWeather(String city, WeatherResponse res) {
+        System.out.println("\n=== MONITORAGGIO METEO: " + city.toUpperCase() + " ===");
+        System.out.printf("Temp: %.1f°C | Vento: %.1f km/h | UV: %.1f | Pioggia Attuale: %d%%\n",
+            res.current().temperature(), res.current().windSpeed(), 
+            res.current().uvIndex(), res.current().precipProbability());
+
+        System.out.println("\nPREVISIONI 7 GIORNI:");
+        System.out.println("+------------+------------+------------+------------+");
+        System.out.println("| Data       | Max (°C)   | Min (°C)   | Pioggia %  |");
+        System.out.println("+------------+------------+------------+------------+");
+        
+        for (DailyForecast df : res.daily()) {
+            System.out.printf("| %-10s | %-10.1f | %-10.1f | %-10d |\n", 
+                df.date(), df.maxTemp(), df.minTemp(), df.precipProbability());
         }
+        System.out.println("+------------+------------+------------+------------+");
     }
 }

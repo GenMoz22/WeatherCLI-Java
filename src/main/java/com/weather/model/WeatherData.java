@@ -1,3 +1,10 @@
 package com.weather.model;
-
-public record WeatherData(double temperature) {}
+/**
+ * Rappresenta dati meteo della città per adesso.
+ */
+public record WeatherData(
+    double temperature, 
+    double windSpeed, 
+    double uvIndex, 
+    int precipProbability
+) {}
