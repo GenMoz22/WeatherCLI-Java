@@ -1,5 +1,5 @@
 # WeatherCLI-Java
-**WeatherCLI-Java** è uno strumento di monitoraggio meteo avanzato da riga di comando. Sfruttando Java 21 e le API di Open-Meteo, offre un'analisi dettagliata del clima attuale e previsioni a lungo termine con un sistema di caching intelligente per ottimizzare le performance.
+**WeatherCLI-Java** è uno strumento di monitoraggio meteo da riga di comando. Sfruttando Java e le API di Open-Meteo, offre un'analisi del clima attuale e previsioni a medio termine con un sistema di caching intelligente per ottimizzare le performance.
 
 ## Funzioni
 * **Monitoraggio Avanzato**: Visualizzazione di temperatura, velocità del vento, indice UV e probabilità di pioggia (attuale e giornaliera).
