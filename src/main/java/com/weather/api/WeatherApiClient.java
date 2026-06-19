@@ -21,7 +21,7 @@ public class WeatherApiClient {
 
     public CityCoordinates getCoordinates(String city) throws Exception {
         String encodedCity = URLEncoder.encode(city, StandardCharsets.UTF_8);
-        String geoUrl = "https://geocoding-api.open-meteo.com/v1/search?name=" + encodedCity + "&count=1";
+        String geoUrl = "https://geocoding-api.open-meteo.com/v1/search?name=" + encodedCity + "&count=1&language=it&format=json";
 
         log.info("Esecuzione Geocoding per: {}", city);
         
@@ -45,7 +45,7 @@ public class WeatherApiClient {
         String url = String.format(Locale.US,
             "https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f" +
             "&current=temperature_2m,wind_speed_10m,uv_index,precipitation_probability" +
-            "&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto", 
+            "&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=14", 
             lat, lon);
 
         log.info("Richiesta API Meteo Avanzata: {}", url);
@@ -68,7 +68,7 @@ public class WeatherApiClient {
             (int) JsonParser.getDouble(currentPart, "\"precipitation_probability\"")
         );
 
-        // Parsing Previsioni 7 Giorni
+        // Parsing Previsioni 14 Giorni
         List<DailyForecast> dailyList = parseDailyForecasts(json);
 
         return new WeatherResponse(current, dailyList, System.currentTimeMillis());
@@ -83,7 +83,7 @@ public class WeatherApiClient {
         String[] mins = extractArray(dailyPart, "\"temperature_2m_min\"");
         String[] precips = extractArray(dailyPart, "\"precipitation_probability_max\"");
 
-        for (int i = 0; i < Math.min(dates.length, 7); i++) {
+        for (int i = 0; i < Math.min(dates.length, 14); i++) {
             forecasts.add(new DailyForecast(
                 dates[i].replace("\"", "").trim(), 
                 Double.parseDouble(maxs[i].trim()), 

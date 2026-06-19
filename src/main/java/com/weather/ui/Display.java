@@ -10,7 +10,7 @@ public class Display {
             res.current().temperature(), res.current().windSpeed(), 
             res.current().uvIndex(), res.current().precipProbability());
 
-        System.out.println("\nPREVISIONI 7 GIORNI:");
+        System.out.println("\nPREVISIONI 14 GIORNI:");
         System.out.println("+------------+------------+------------+------------+");
         System.out.println("| Data       | Max (°C)   | Min (°C)   | Pioggia %  |");
         System.out.println("+------------+------------+------------+------------+");

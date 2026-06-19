@@ -2,8 +2,8 @@
 **WeatherCLI-Java** è uno strumento di monitoraggio meteo da riga di comando. Sfruttando Java e le API di Open-Meteo, offre un'analisi del clima attuale e previsioni a medio termine con un sistema di caching intelligente per ottimizzare le performance.
 
 ## Funzioni
-* **Monitoraggio Avanzato**: Visualizzazione di temperatura, velocità del vento, indice UV e probabilità di pioggia (attuale e giornaliera).
-* **Previsioni a 7 Giorni**: Analisi delle temperature minime e massime per la settimana entrante con output tabellare ASCII.
+* **Monitoraggio Avanzato**: Visualizzazione di temperatura, velocità del vento, indice UV e probabilità di pioggia attuale.
+* **Previsioni a 14 Giorni**: Analisi delle temperature minime e massime, e probabilità di pioggia con output tabellare ASCII.
 * **Smart Caching**: Sistema di memorizzazione in-memory (`ConcurrentHashMap`) che riduce le chiamate API ridondanti (validità 30 minuti).
 * **Architettura Clean**: Utilizzo di Java **Records** per modelli dati immutabili e **Lombok**
 * **Logging Professionale**: Gestione differenziata dei log tramite **SLF4J/Logback** con rotazione automatica e archiviazione.
@@ -71,6 +71,6 @@ Il progetto utilizza gli endpoint di **Open-Meteo** (nessuna API Key richiesta):
 ## Roadmap
 
 * [x] **Dati Avanzati** (UV, Vento, Precipitazioni).
-* [x] **Previsioni a 7 giorni** con parsing di array JSON.
+* [x] **Previsioni a 14 giorni** con parsing di array JSON.
 * [x] **Sistema di Caching** in-memory.
 * [ ] **Esportazione PDF/CSV**: Generazione di report scaricabili.
